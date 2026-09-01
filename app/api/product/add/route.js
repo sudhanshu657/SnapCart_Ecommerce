@@ -5,6 +5,15 @@ import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 
+// Increase body size limit for image uploads (Vercel default is 4.5MB)
+export const config = {
+    api: {
+        bodyParser: false,
+        responseLimit: false,
+    },
+};
+
+export const maxDuration = 60; // seconds (Vercel Pro allows up to 300s)
 
 
 //configur cloudinary
