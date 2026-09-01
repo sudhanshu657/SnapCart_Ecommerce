@@ -14,6 +14,7 @@ export async function GET(request){
 
 
     } catch (error) {
+        console.error("[DB ERROR]", error.name, error.message);
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }

@@ -2,26 +2,29 @@ import mongoose from "mongoose";
 
 let cached = global.mongoose;
 
-if(!cached){
-    cached = global.mongoose = {conn: null, promise: null}; 
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function connectDB(){
-
-    if(cached.conn){
+async function connectDB() {
+    if (cached.conn) {
         return cached.conn;
     }
-    if(!cached.promise){
+    if (!cached.promise) {
         const opts = {
             bufferCommands: false,
-        }
-        cached.promise = mongoose.connect(`${process.env.MONGODB_URI}/snapcart`,opts).then((mongoose)=>{
-            return mongoose;
-        });
+        };
+        cached.promise = mongoose
+            .connect(`${process.env.MONGODB_URI}/snapcart`, opts)
+            .then((mongoose) => mongoose)
+            .catch((err) => {
+                // Clear the cached promise on failure so the next request retries
+                cached.promise = null;
+                throw err;
+            });
     }
     cached.conn = await cached.promise;
-    return cached.conn; 
-
+    return cached.conn;
 }
 
-export default connectDB;
+export default connectDB;
